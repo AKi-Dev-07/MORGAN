@@ -129,6 +129,14 @@ export default function LoginPage() {
             </button>
           </form>
         </div>
+
+        {/* Debug Panel */}
+        <div className="mt-8 rounded-xl bg-gray-50 p-4 text-xs text-gray-500 border border-gray-200 break-all">
+          <strong>Debug Info:</strong><br />
+          URL length: {process.env.NEXT_PUBLIC_SUPABASE_URL?.length || 0}<br />
+          URL starts with: {process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 10) || "none"}<br />
+          Raw URL: {process.env.NEXT_PUBLIC_SUPABASE_URL || "UNDEFINED (Missing in Vercel!)"}
+        </div>
       </div>
     </div>
   );
