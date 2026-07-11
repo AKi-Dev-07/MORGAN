@@ -7,6 +7,7 @@ import {
   Loader2,
   Calculator,
   Search,
+  Trash2,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -113,6 +114,16 @@ export default function LoansPage() {
     setSaving(false);
   }
 
+  async function deleteLoan(loanId: string) {
+    if (!confirm("Are you sure you want to delete this paid loan? This action cannot be undone.")) return;
+    const { error } = await supabase.from("loans").delete().eq("id", loanId);
+    if (error) {
+      alert(`Error deleting loan: ${error.message}`);
+    } else {
+      fetchData();
+    }
+  }
+
   const filtered = loans.filter((loan) => {
     const matchesSearch =
       loan.borrowers.full_name
@@ -209,6 +220,7 @@ export default function LoansPage() {
                 <th>Issue Date</th>
                 <th>Due Date</th>
                 <th>Status</th>
+                <th className="text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -239,6 +251,17 @@ export default function LoansPage() {
                   </td>
                   <td>
                     <StatusBadge status={loan.status} />
+                  </td>
+                  <td className="text-right">
+                    {loan.status === "PAID" && (
+                      <button
+                        onClick={() => deleteLoan(loan.id)}
+                        className="p-1.5 rounded-md hover:bg-black/5 transition-colors"
+                        title="Delete Paid Loan"
+                      >
+                        <Trash2 size={16} style={{ color: "#ef4444" }} />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
